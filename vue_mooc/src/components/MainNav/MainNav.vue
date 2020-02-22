@@ -59,7 +59,6 @@
 
 <script>
   import {mapState, mapActions} from 'vuex'
-  import '../../static/css/animate.css'
   import {getCourse} from '../../api/api'
   import {SEARCH_SUGGESTION_SIZE} from '../../config'
 

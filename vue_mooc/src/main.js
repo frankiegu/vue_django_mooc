@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
-import Bus from './lib/bus'
 import router from './router'
 import store from './store'
-import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import ElementUI from 'element-ui';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-Vue.prototype.$bus = Bus
 
 // 解决跳转后滚动条位置不正确的bug
 router.afterEach((to, from, next) => {
