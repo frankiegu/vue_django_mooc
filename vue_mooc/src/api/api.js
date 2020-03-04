@@ -8,6 +8,7 @@ export const getBanner = () => {
   return axios.get(`${HOST}banner/`)
 }
 
+
 // 获取轮播图左侧的导航栏信息
 export const getBannerNav = () => {
   return axios.get(`${HOST}banner_nav/`)

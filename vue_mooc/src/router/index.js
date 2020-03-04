@@ -11,6 +11,11 @@ const router = new VueRouter({
   // mode: 'history'
 })
 
+// 解决跳转后滚动条位置不正确的bug
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0)
+})
+
 // 全局前置守卫，页面标题设置和登陆拦截
 router.beforeEach((to, from, next) => {
   // to：跳转路由对象

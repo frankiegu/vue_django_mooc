@@ -7,3 +7,11 @@ class CoursePagination(pagination.PageNumberPagination):
     """
     page_size = 10
     page_size_query_param = 'page_size'
+
+
+class PlayRecordPagination(pagination.PageNumberPagination):
+    """
+        课程分页
+    """
+    page_size = 10
+    page_size_query_param = 'page_size'

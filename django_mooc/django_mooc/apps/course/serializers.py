@@ -88,3 +88,24 @@ class NavSerializer(serializers.ModelSerializer):
     class Meta:
         model = BannerNav
         fields = '__all__'
+
+
+class PlayRecordSerializer(serializers.ModelSerializer):
+    """
+        播放记录
+    """
+    title = serializers.CharField(source='lesson.title', read_only=True)
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    cover = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PlayRecord
+        exclude = ['id']
+
+    def get_cover(self, obj):
+        course = obj.lesson.lesson_chapter.all()[0].chapter_course.all()[0]
+        course_serializer = CourseSerializer(course, context={'request': self.context['request']})
+
+        return course_serializer.data['cover_img']

@@ -25,7 +25,7 @@
     },
     mounted() {
       this.player = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
-
+        //
       })
     },
     beforeDestroy() {

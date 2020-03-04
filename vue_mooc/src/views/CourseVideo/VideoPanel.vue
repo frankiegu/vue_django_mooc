@@ -8,17 +8,25 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
         <div class="player">
-          <video-player v-if="videoOptions.sources.length > 0" :options="videoOptions"></video-player>
+          <video-player v-if="videoOptions.sources.length > 0"
+                        :options="videoOptions"></video-player>
           <div class="play-list">
             <h3>选集</h3>
             <div class="list">
-              <el-collapse accordion>
+              <el-collapse :value="chapterID" accordion>
                 <el-collapse-item
+                        :class="{active:chapter.id==chapterID}"
+                        :name="chapter.id+''"
                         :title="chapter.title"
                         :key="chapter.id"
                         v-for="chapter in courses.currentCourse.chapter">
                   <ul v-if="chapter.lesson.length > 0">
-                    <li :key="lesson.id" v-for="lesson in chapter.lesson">{{lesson.title}}</li>
+                    <li :class="{active:lesson.id==lessonID}"
+                        @click="toPlay(courseID,chapter.id,lesson.id)"
+                        :key="lesson.id"
+                        v-for="lesson in chapter.lesson">
+                      {{lesson.title}}
+                    </li>
                   </ul>
                 </el-collapse-item>
               </el-collapse>
@@ -37,6 +45,17 @@
   export default {
     name: "VideoPanel",
     components: {VideoPlayer},
+    methods: {
+      toPlay(courseID, chapterID, lessonID) {
+        let params = {
+          courseID: courseID + '',
+          chapterID: chapterID + '',
+          lessonID: lessonID + ''
+        }
+        this.$router.push({name: 'courseVideo', params})
+        window.location.reload()
+      }
+    },
     watch: {
       '$route': function (to, from) {
         getFullCourse(this.courseID)
@@ -47,6 +66,7 @@
             let lesson = chapterList.length > 0 ? chapterList[0].lesson.filter(item => item.id == this.lessonID) : []
             let src = lesson.length > 0 ? lesson[0].video : '#'
 
+            this.videoOptions.sources = []
             this.videoOptions.sources.push({
               src,
               type: "video/mp4"
@@ -60,13 +80,13 @@
     },
     computed: {
       courseID() {
-        return this.$route.params.courseID
+        return this.$route.params.courseID + ''
       },
       chapterID() {
-        return this.$route.params.chapterID
+        return this.$route.params.chapterID + ''
       },
       lessonID() {
-        return this.$route.params.lessonID
+        return this.$route.params.lessonID + ''
       }
     },
     data() {
@@ -76,7 +96,7 @@
         },
         videoOptions: {
           "controls": true,
-          // "autoplay": "play",
+          "autoplay": "play",
           "width": "860px",
           "height": "480px",
           "sources": []
@@ -84,6 +104,7 @@
       }
     },
     created() {
+      // 获取当前播放课程的信息
       getFullCourse(this.courseID)
         .then(resp => {
           this.$set(this.courses, 'currentCourse', resp.data)
@@ -92,6 +113,7 @@
           let lesson = chapterList.length > 0 ? chapterList[0].lesson.filter(item => item.id == this.lessonID) : []
           let src = lesson.length > 0 ? lesson[0].video : '#'
 
+          this.videoOptions.sources = []
           this.videoOptions.sources.push({
             src,
             type: "video/mp4"
@@ -172,32 +194,46 @@
               .el-collapse {
                 background: #3b3b3b;
 
-                /* 章节标题 */
-                .el-collapse-item__header {
-                  background: #3b3b3b;
-                  text-indent: 8px;
-                  color: #cccc99;
-                }
+                .el-collapse-item {
+                  &.active {
+                    .el-collapse-item__header {
+                      font-weight: bold;
+                      color: #ff346a;
+                    }
+                  }
 
-                /* 课程列表背景 */
-                .el-collapse-item__content {
-                  background: #3b3b3b;
-                  /*color: #cccc99;*/
-                  ul {
-                    list-style: none;
-                    text-indent: 12px;
+                  /* 章节标题 */
+                  .el-collapse-item__header {
+                    background: #3b3b3b;
+                    text-indent: 8px;
+                    color: #cccc99;
+                  }
 
-                    li {
-                      color: white;
-                      font-size: 13px;
-                      line-height: 20px;
-                      height: 20px;
-                      font-family: "Microsoft YaHei UI", "Arial", "Hiragino Sans GB", 宋体, "Georgia", "serif";
-                      font-weight: 200;
-                      cursor: pointer;
+                  /* 课程列表背景 */
+                  .el-collapse-item__content {
+                    background: #3b3b3b;
+                    /*color: #cccc99;*/
+                    ul {
+                      list-style: none;
+                      text-indent: 12px;
 
-                      &:hover {
-                        opacity: .8;
+                      li {
+                        color: white;
+                        font-size: 13px;
+                        line-height: 20px;
+                        height: 20px;
+                        font-family: "Microsoft YaHei UI", "Arial", "Hiragino Sans GB", 宋体, "Georgia", "serif";
+                        font-weight: 200;
+                        cursor: pointer;
+
+                        &:hover {
+                          opacity: .8;
+                        }
+
+                        &.active {
+                          color: #ff346a;
+                          font-weight: 400;
+                        }
                       }
                     }
                   }

@@ -4,6 +4,8 @@
       <div class="item logo">
         <h1 @click="handleToHomePage"></h1>
       </div>
+
+      <!-- 搜索 -->
       <div class="item search">
         <el-autocomplete
                 class="search-input"
@@ -19,8 +21,11 @@
 
         </div>
       </div>
+
+      <!-- 导航栏右侧按钮区 -->
       <div class="item menu">
         <ul>
+          <!-- 登录 -->
           <li v-if="isLogin">
             <div class="username" @click="">{{ userName }}</div>
           </li>
@@ -28,21 +33,46 @@
             <div @click.prevent="">登录/注册</div>
           </li>
         </ul>
+
         <ul>
-          <li><a href="">我的课程 <i class="iconfont icon-buyecschooseplan"></i></a></li>
+          <!-- 我的课程 -->
+          <li>
+            <router-link :to="{name:'center', params:{app:'my_course'}}">
+              我的课程 <i class="iconfont icon-buyecschooseplan"></i>
+            </router-link>
+          </li>
         </ul>
+
         <ul>
-          <li><a href="">个人中心<i class="iconfont icon-xia"></i> </a></li>
+          <!-- 个人中心 -->
+          <li @mouseenter="isShowCenterMenu=true" @mouseleave="isShowCenterMenu=false">
+            <el-dropdown>
+              <span class="el-dropdown-link">个人中心<i class="el-icon-arrow-down el-icon--right"></i>  </span>
+              <el-dropdown-menu class="user-center" slot="dropdown">
+                <el-dropdown-item>
+                  <router-link tag="li" to="/center/my_course/">我的课程</router-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <router-link tag="li" to="/center/my_record/">播放记录</router-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <router-link tag="li" to="/center/my_fav/">我的收藏</router-link>
+                </el-dropdown-item>
+                <el-dropdown-item divided>退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </li>
         </ul>
+
         <ul @click="isShowFollowPanel=true">
+          <!-- 关注我们 -->
           <li><a>
             <i style="font-size: 9px;margin-right: 4px;"
                class="iconfont icon-add1"></i>关注我们</a>
           </li>
         </ul>
       </div>
-
-      <!--   关注微博和豆瓣   -->
+      <!-- 关注微博和豆瓣弹出层 -->
       <transition name="fade"
                   enter-active-class="animated swing"
                   leave-active-class="animated fadeOut">
@@ -53,6 +83,7 @@
                   class="iconfont icon-douban"></i></a>
         </div>
       </transition>
+
     </div>
   </div>
 </template>
@@ -207,6 +238,26 @@
           ul {
             list-style: none;
 
+            /* 个人中心 */
+            .el-dropdown {
+              color: #E6E6B1;
+              font-size: 12px;
+
+              .el-dropdown-menu__item {
+                line-height: 33px;
+                height: 33px;
+                color: #E6E6B1;
+              }
+
+            }
+
+
+            .center-menu-container {
+              position: absolute;
+              top: 30px;
+              padding-top: 20px;
+            }
+
             li {
               margin: 11px;
               line-height: 14px;
@@ -236,7 +287,7 @@
               &:hover {
                 background: #cccc99;
 
-                a{
+                a {
                   color: white;
                 }
               }

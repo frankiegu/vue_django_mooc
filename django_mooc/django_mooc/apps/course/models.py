@@ -1,4 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+
+class PlayRecord(models.Model):
+    """
+        播放记录
+    """
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='关联用户')
+    lesson = models.ForeignKey('Lesson', on_delete=models.DO_NOTHING, verbose_name='对应视频')
+    play_time = models.DateTimeField(auto_now_add=True, verbose_name='播放时间')
+
+    class Meta:
+        db_table = 'geng_record'
+        verbose_name = '播放记录'
+        verbose_name_plural = verbose_name
+        ordering = ['-id']
+
+    def __str__(self):
+        return f'{self.user} 观看了 {self.lesson.title}'
 
 
 class Org(models.Model):
@@ -107,9 +126,9 @@ class Course(models.Model):
     has_activity_price = models.BooleanField(default=False, verbose_name='是否有活动价格')
     activity_price = models.CharField(max_length=11, default='免费', verbose_name='活动价格')
     category = models.ForeignKey('Category', on_delete=models.DO_NOTHING, verbose_name='课程类别')
-    tag = models.ManyToManyField('Tag', verbose_name='课程标签')
+    tag = models.ManyToManyField('Tag', blank=True, verbose_name='课程标签')
     has_chapter = models.BooleanField(default=False, verbose_name='是否具有章节')
-    chapter = models.ManyToManyField(to='Chapter', blank=True, verbose_name='课程的所有章节')
+    chapter = models.ManyToManyField(to='Chapter', related_name='chapter_course', blank=True, verbose_name='课程的所有章节')
 
     class Meta:
         db_table = 'geng_course'
@@ -133,7 +152,7 @@ class Chapter(models.Model):
     """
     title = models.CharField(max_length=32, unique=True, default='最新章节',
                              verbose_name='章节名称')
-    lesson = models.ManyToManyField(to='Lesson', blank=True, verbose_name='课时')
+    lesson = models.ManyToManyField(to='Lesson', related_name='lesson_chapter', blank=True, verbose_name='课时')
     joined_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:

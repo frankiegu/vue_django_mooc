@@ -7,13 +7,20 @@ from course.paginations import *
 from course.serializers import *
 
 
+class PlayRecordViewSet(viewsets.ModelViewSet):
+    queryset = PlayRecord.objects.all()
+    serializer_class = PlayRecordSerializer
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filterset_fields = ['user']
+
+
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     pagination_class = CoursePagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filterset_fields = ('tag__name', 'tag',)
-    search_fields = ('title', 'sub_title', 'category__name', 'category__title')
+    filterset_fields = ['tag__name', 'tag']
+    search_fields = ['title', 'sub_title', 'category__name', 'category__title']
 
 
 class FullCourseViewSet(viewsets.GenericViewSet,

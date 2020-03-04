@@ -2,6 +2,21 @@ import Home from '../views/Home/Home'
 
 const routes = [
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/Login/Login'),
+    meta: {
+      title: '小耿课堂-登录'
+    }
+  }, {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/Register/Register'),
+    meta: {
+      title: '小耿课堂-注册'
+    }
+  },
+  {
     path: '/',
     name: 'home',
     component: Home,
@@ -33,6 +48,28 @@ const routes = [
     meta: {
       title: '小耿课堂 - 课程播放'
     }
+  },
+  {
+    path: '/center',
+    name: 'center',
+    component: () => import('../views/Center/Center'),
+    redirect: '/center/my_course/',
+    meta: {
+      title: '小耿课程 - 个人中心'
+    },
+    children: [
+      {
+        path: 'my_course',
+        component: () => import('../views/Center/MyCourse')
+      },
+      {
+        path: 'my_record',
+        component: () => import('../views/Center/MyRecord')
+      }, {
+        path: 'my_fav',
+        component: () => import('../views/Center/MyFav')
+      },
+    ]
   },
   {
     path: '*',

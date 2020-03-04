@@ -14,6 +14,7 @@ router.register('course', views.CourseViewSet)
 router.register('full_course', views.FullCourseViewSet)
 router.register('banner', views.BannerViewSet)
 router.register('banner_nav', views.BannerNavViewSet)
+router.register('play_record', views.PlayRecordViewSet)
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
