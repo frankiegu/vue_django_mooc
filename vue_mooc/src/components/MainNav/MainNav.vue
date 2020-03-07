@@ -244,9 +244,8 @@
               font-size: 12px;
 
               .el-dropdown-menu__item {
-                line-height: 33px;
-                height: 33px;
-                color: #E6E6B1;
+                line-height: 33px !important;
+                height: 33px !important;
               }
 
             }
