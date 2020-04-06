@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const urlEncode = (param, key, encode) => {
   if (param == null) return '';
   var paramStr = '';
@@ -12,3 +14,18 @@ export const urlEncode = (param, key, encode) => {
   }
   return paramStr;
 }
+
+export const saveTokenTime = (days) => {
+  localStorage.removeItem('token_end_time')
+  localStorage.setItem('token_end_time', moment().add(days, 'days'))
+}
+
+export const isValidToken = () => {
+  let endTime = localStorage.getItem('token_end_time')
+  if (endTime) {
+    return moment().valueOf() < moment(endTime).valueOf()
+  }
+
+  return false
+}
+

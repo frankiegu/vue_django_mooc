@@ -4,10 +4,10 @@
       <div class="center-menu">
         <div class="user-info">
           <div class="avatar">
-            <img @mousedown.prevent="" src="../../assets/avatar.jpeg" alt="">
+            <img @mousedown.prevent="" src="../../assets/avatar.png" alt="">
           </div>
           <div class="username">登录账号:
-            {{username}}
+            {{userInfo.username}}
           </div>
         </div>
         <div class="list">
@@ -19,11 +19,6 @@
           <router-link tag="div" to="/center/my_record/" class="item"
                        :class="{active:curPath=='/center/my_record/'}">
             <i class="iconfont icon-jilu"></i> 播放记录
-          </router-link>
-          <router-link tag="div" to="/center/my_fav/" class="item"
-                       :class="{active:curPath=='/center/my_fav/'}"><i
-                  class="iconfont icon-tubiaozhizuomobandefuben-">
-          </i> 我的收藏
           </router-link>
         </div>
       </div>
@@ -40,7 +35,7 @@
   export default {
     name: "CenterPanel",
     computed: {
-      ...mapState(['username']),
+      ...mapState(['userInfo']),
       curPath() {
         return this.$route.path
       }

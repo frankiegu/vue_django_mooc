@@ -9,7 +9,8 @@
         <a href="//github.com/gengwenhao/vue_django_mooc" target="_blank"><i class="iconfont icon-about"></i> About 小耿课堂
         </a>
       </p>
-      <p><a href="#">Copyright &copy; gengwenhao.cn</a><a href="">辽ICP备19006965号-1</a></p>
+      <p><a href="#">Copyright &copy; gengwenhao.cn</a><a
+              href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action">辽ICP备19006965号-1</a></p>
     </div>
   </div>
 </template>

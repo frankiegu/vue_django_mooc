@@ -65,10 +65,7 @@ const routes = [
       {
         path: 'my_record',
         component: () => import('../views/Center/MyRecord')
-      }, {
-        path: 'my_fav',
-        component: () => import('../views/Center/MyFav')
-      },
+      }
     ]
   },
   {

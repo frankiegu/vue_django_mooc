@@ -4,17 +4,18 @@
       <h1 class="logo"></h1>
       <div class="form">
         <el-form label-width="80px" size="mini"
-                 :model="formModel" status-icon
-                 :rules="rules" ref="formModel">
+                 :model="ruleForm" status-icon
+                 :rules="rules" ref="ruleForm">
 
           <el-form-item label="用户名" prop="username">
-            <el-input type="text" v-model="formModel.username" autocomplete="off"></el-input>
+            <el-input autofocus type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="formModel.password" autocomplete="off"></el-input>
+            <el-input type="password" v-model="ruleForm.password" autocomplete="new-password"></el-input>
           </el-form-item>
 
-          <el-button size="small" class="btn-register" type="primary" @click="submitForm('formModel')">注册</el-button>
+          <el-button size="small" class="btn-register" type="primary" @click="submitForm('ruleForm')">注册成为用户
+          </el-button>
         </el-form>
 
         <div class="toolbar">
@@ -36,30 +37,69 @@
       </div>
 
     </div>
+    <div class="footer">
+      Copyright © www.gengwenhao.cn
+      <a style="margin-left: 23px;" href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action">辽ICP备19006965号-1</a>
+    </div>
   </div>
 </template>
 
 <script>
+  import {mapMutations} from 'vuex'
+  import {register} from '../../api/api'
+
   export default {
     name: "Register",
     data() {
-
-
+      var validateUsername = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入用户名'))
+        } else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('password')
+          }
+          callback()
+        }
+      }
+      var validatePassword = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'))
+        } else {
+          callback()
+        }
+      }
       return {
-        formModel: {
+        checked: false,
+        ruleForm: {
           username: '',
           password: ''
-        },
-        rules: {}
+        }
+        ,
+        rules: {
+          username: [
+            {validator: validateUsername, trigger: 'blur'}
+          ],
+          password:
+            [
+              {validator: validatePassword, trigger: 'blur'}
+            ]
+        }
       }
     },
     methods: {
+      ...mapMutations(['SET_JWT_TOKEN', 'SET_USER_INFO']),
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!')
+            let userInfo = {
+              username: this.ruleForm.username,
+              password: this.ruleForm.password
+            }
+            register(userInfo)
+              .then(res => {
+                this.$router.push({name: 'login'})
+              })
           } else {
-            console.log('error submit!!')
             return false
           }
         })
@@ -183,6 +223,24 @@
           color: #b4b4b4;
           cursor: pointer;
         }
+      }
+    }
+
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      height: 23px;
+      line-height: 23px;
+      background: rgba(230, 230, 230, 0.35);
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      color: #616147;
+
+      a {
+        color: #616147;
+        font-size: 12px;
+        text-decoration: none;
       }
     }
   }

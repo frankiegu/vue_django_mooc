@@ -1,3 +1,4 @@
+<!-- 最上方导航栏 -->
 <template>
   <div id="main-nav">
     <div class="banner-container">
@@ -26,11 +27,8 @@
       <div class="item menu">
         <ul>
           <!-- 登录 -->
-          <li v-if="isLogin">
-            <div class="username" @click="">{{ userName }}</div>
-          </li>
-          <li v-else-if="isLogin">
-            <div @click.prevent="">登录/注册</div>
+          <li v-if="userInfo.username != ''">
+            <div class="username" @click="logout">{{ userInfo.username }} 退出登录</div>
           </li>
         </ul>
 
@@ -55,10 +53,6 @@
                 <el-dropdown-item>
                   <router-link tag="li" to="/center/my_record/">播放记录</router-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <router-link tag="li" to="/center/my_fav/">我的收藏</router-link>
-                </el-dropdown-item>
-                <el-dropdown-item divided>退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </li>
@@ -90,8 +84,8 @@
 
 <script>
   import {mapState, mapActions} from 'vuex'
-  import {getCourse} from '../../api/api'
   import {SEARCH_SUGGESTION_SIZE} from '../../config'
+  import {getCourse} from '../../api/api'
 
   export default {
     name: "MainNav",
@@ -103,13 +97,16 @@
     },
     computed: {
       ...mapState([
-        'isLogin',
-        'userName'
+        'userInfo',
       ])
+    },
+    created() {
+      this.updateUserInfo()
     },
     methods: {
       ...mapActions([
-        'updateSearchResult'
+        'updateSearchResult',
+        'updateUserInfo'
       ]),
       handleToHomePage() {
         this.$router.push({path: '/'})
@@ -134,6 +131,10 @@
       handleSelect(item) {
         let searchKey = item.title
         this.$router.push({name: 'searchResult', params: {searchKey}})
+      },
+      logout() {
+        localStorage.removeItem('token')
+        location.replace('/')
       }
     }
   }

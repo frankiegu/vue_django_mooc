@@ -1,7 +1,12 @@
-import {getBanner, getBannerNav, getCourse} from '../api/api'
+import {getBanner, getBannerNav, getCourse, getUserInfo} from '../api/api'
 
 
 const actions = {
+  updateUserInfo({commit}) {
+    getUserInfo().then(res => {
+      commit('SET_USER_INFO', res.data)
+    })
+  },
   updateBanner({commit}) {
     getBanner().then(res => {
       commit('SET_BANNER', res.data.results)

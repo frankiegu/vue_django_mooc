@@ -1,9 +1,8 @@
 const state = {
-  username: 'gengwenhao',
-  // 在state中定义的属性可以在各个组件中使用
-  appName: 'admin',
+  appName: 'GengCourse',
   isLogin: true,
-  userName: 'gengwenhao',
+  userInfo: {},
+  token: '',
   // 轮播图
   banner: [],
   // 轮播图左侧导航栏

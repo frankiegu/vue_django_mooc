@@ -48,7 +48,7 @@
 </template>
 
 <script>
-  import {getFullCourse} from '../../api/api'
+  import {addCourseRecord, getFullCourse} from '../../api/api'
 
   export default {
     name: "CourseDetail",
@@ -59,6 +59,7 @@
       // 开始学习按钮点击
       handleBtnStartClick() {
         let courseID = this.courses.currentCourse.id
+        addCourseRecord(courseID)
         let chapterID = this.courses.currentCourse.chapter[0].id
         let lessonID = this.courses.currentCourse.chapter[0].lesson[0].id
         this.handleToPlay({courseID, chapterID, lessonID})

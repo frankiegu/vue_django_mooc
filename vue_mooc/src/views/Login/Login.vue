@@ -5,17 +5,17 @@
       <div class="form">
         <el-form label-width="80px" size="mini"
                  :model="ruleForm" status-icon
-                 :rules="rules" ref="formModel"
-                 class="demo-ruleForm">
-          <el-form-item label="密码" prop="pass">
-            <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+                 :rules="rules" ref="ruleForm">
+
+          <el-form-item label="用户名" prop="username">
+            <el-input autofocus type="username" v-model="ruleForm.username" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码" prop="checkPass">
-            <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="ruleForm.password" auto-complete="new-password"></el-input>
           </el-form-item>
 
           <div class="item-line">
-            <el-checkbox v-model="checked">两周内自动登录
+            <el-checkbox v-model="checked">一周内自动登录
             </el-checkbox>
             <a href="#" class="forget">忘记密码？</a>
           </div>
@@ -35,87 +35,80 @@
         </div>
 
         <div class="tips">
-          还没有为知笔记帐号？
+          还没有小耿课堂帐号？
           <router-link tag="span" to="/register">去创建</router-link>
         </div>
       </div>
-
+    </div>
+    <div class="footer">
+      Copyright © www.gengwenhao.cn
+      <a style="margin-left: 23px;" href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action">辽ICP备19006965号-1</a>
     </div>
   </div>
 </template>
 
 <script>
+  import {login} from '../../api/api'
+  import MainFooter from '../../components/MainFooter/MainFooter'
+  import {saveTokenTime} from '../../lib/tool'
+
   export default {
     name: "Login",
+    components: {MainFooter},
     data() {
-      var checkAge = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('年龄不能为空'));
-        }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字值'));
-          } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'));
-            } else {
-              callback();
-            }
-          }
-        }, 1000);
-      };
-      var validatePass = (rule, value, callback) => {
+      var validateUsername = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入密码'));
+          callback(new Error('请输入用户名'))
         } else {
           if (this.ruleForm.checkPass !== '') {
-            this.$refs.ruleForm.validateField('checkPass');
+            this.$refs.ruleForm.validateField('password')
           }
-          callback();
+          callback()
         }
-      };
-      var validatePass2 = (rule, value, callback) => {
+      }
+      var validatePassword = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.ruleForm.pass) {
-          callback(new Error('两次输入密码不一致!'));
+          callback(new Error('请输入密码'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       return {
+        checked: false,
         ruleForm: {
-          pass: '',
-          checkPass: '',
-          age: ''
-        },
-        rules: {
-          pass: [
-            {validator: validatePass, trigger: 'blur'}
-          ],
-          checkPass: [
-            {validator: validatePass2, trigger: 'blur'}
-          ],
-          age: [
-            {validator: checkAge, trigger: 'blur'}
-          ]
+          username: '',
+          password: ''
         }
-      };
+        ,
+        rules: {
+          username: [
+            {validator: validateUsername, trigger: 'blur'}
+          ],
+          password:
+            [
+              {validator: validatePassword, trigger: 'blur'}
+            ]
+        }
+      }
     },
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            let userInfo = {
+              username: this.ruleForm.username,
+              password: this.ruleForm.password
+            }
+            login(userInfo).then(res => {
+              // 设置token时效
+              saveTokenTime(this.checked ? 7 : 1)
+              localStorage.setItem('token', res.data.token)
+              location.replace('/')
+            })
           } else {
-            console.log('error submit!!');
-            return false;
+            return false
           }
-        });
-      }
-      ,
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+        })
       }
     }
   }
@@ -236,6 +229,24 @@
           color: #b4b4b4;
           cursor: pointer;
         }
+      }
+    }
+
+    .footer {
+      font-size: 12px;
+      text-align: center;
+      height: 23px;
+      line-height: 23px;
+      background: rgba(230, 230, 230, 0.35);
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      color: #616147;
+
+      a {
+        color: #616147;
+        font-size: 12px;
+        text-decoration: none;
       }
     }
   }

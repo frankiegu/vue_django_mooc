@@ -1,4 +1,7 @@
 const mutations = {
+  SET_USER_INFO(state, userInfo) {
+    state.userInfo = userInfo
+  },
   SET_BANNER(state, banner) {
     state.banner = banner
   },

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import {getFullCourse} from '../../api/api'
+  import {addPlayRecord, getFullCourse} from '../../api/api'
   import VideoPlayer from '../../components/VideoPlayer/VideoPlayer'
 
   export default {
@@ -73,7 +73,6 @@
             })
           })
           .catch(error => {
-            console.log(error)
             this.$router.push({name: '404', params: {next: this.$route.path}})
           })
       }
@@ -113,6 +112,10 @@
           let lesson = chapterList.length > 0 ? chapterList[0].lesson.filter(item => item.id == this.lessonID) : []
           let src = lesson.length > 0 ? lesson[0].video : '#'
 
+          if (lesson) {
+            addPlayRecord(lesson[0].id)
+          }
+
           this.videoOptions.sources = []
           this.videoOptions.sources.push({
             src,
@@ -120,7 +123,6 @@
           })
         })
         .catch(error => {
-          console.log(error)
           this.$router.push({name: '404', params: {next: this.$route.path}})
         })
     }

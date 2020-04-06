@@ -27,4 +27,13 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/login' && to.path !== '/register' && !localStorage.token) {
+    return next('/login')
+  }
+
+  next()
+})
+
+
 export default router
