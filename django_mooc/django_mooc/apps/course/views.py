@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework import mixins
 from rest_framework import filters
 
@@ -7,11 +7,26 @@ from course.paginations import *
 from course.serializers import *
 
 
-class PlayRecordViewSet(viewsets.ModelViewSet):
-    queryset = PlayRecord.objects.all()
+class CourseRecordViewSet(viewsets.GenericViewSet,
+                          mixins.CreateModelMixin,
+                          mixins.ListModelMixin):
+    serializer_class = CourseRecordSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = CourseRecordPagination
+
+    def get_queryset(self):
+        return CourseRecord.objects.filter(user=self.request.user)
+
+
+class PlayRecordViewSet(viewsets.GenericViewSet,
+                        mixins.CreateModelMixin,
+                        mixins.ListModelMixin):
     serializer_class = PlayRecordSerializer
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    filterset_fields = ['user']
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PlayRecordPagination
+
+    def get_queryset(self):
+        return PlayRecord.objects.filter(user=self.request.user)
 
 
 class CourseViewSet(viewsets.ModelViewSet):

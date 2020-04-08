@@ -12,13 +12,31 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import sys
+import datetime
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20
+    'PAGE_SIZE': 20,
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 启用jwt认证
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
+
+AUTHENTICATION_BACKENDS = (
+    # 自定义用户验证
+    'users.views.CustomBackend',
+)
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -47,8 +65,10 @@ INSTALLED_APPS = [
     # plugins
     'django_filters',
     'rest_framework',
+    # 添加drf应用
+    'rest_framework.authtoken',
     # models
-    'users',
+    'users.apps.UsersConfig',
     'course.apps.CourseConfig',
 ]
 

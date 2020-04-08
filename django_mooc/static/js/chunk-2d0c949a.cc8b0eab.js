@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0c949a"],{5900:function(n,e,t){"use strict";t.r(e);var a=function(){var n=this,e=n.$createElement,t=n._self._c||e;return t("div",{attrs:{id:"my-fav"}},[n._v(" 我的收藏 ")])},c=[],r={name:"MyFav"},s=r,u=t("623f"),i=Object(u["a"])(s,a,c,!1,null,"cf695412",null);e["default"]=i.exports}}]);

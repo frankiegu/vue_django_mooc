@@ -3,6 +3,16 @@ from django.contrib import admin
 from course.models import *
 
 
+@admin.register(CourseRecord)
+class CourseRecordAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PlayRecord)
+class PlayRecordAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     pass

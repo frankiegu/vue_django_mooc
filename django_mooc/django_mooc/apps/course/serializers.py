@@ -94,18 +94,43 @@ class PlayRecordSerializer(serializers.ModelSerializer):
     """
         播放记录
     """
+    lesson_id = serializers.CharField(source='lesson.id', read_only=True)
+    chapter_id = serializers.SerializerMethodField(read_only=True)
+    course_id = serializers.SerializerMethodField(read_only=True)
     title = serializers.CharField(source='lesson.title', read_only=True)
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
     cover = serializers.SerializerMethodField()
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = PlayRecord
-        exclude = ['id']
+        fields = '__all__'
 
     def get_cover(self, obj):
         course = obj.lesson.lesson_chapter.all()[0].chapter_course.all()[0]
         course_serializer = CourseSerializer(course, context={'request': self.context['request']})
 
         return course_serializer.data['cover_img']
+
+    def get_chapter_id(self, obj):
+        chapters = Chapter.objects.filter(lesson=obj.lesson)
+
+        return str(chapters[0].id if chapters is not None else None)
+
+    def get_course_id(self, obj):
+        courses = Course.objects.filter(chapter=self.get_chapter_id(obj))
+
+        return str(courses[0].id if courses is not None else None)
+
+
+class CourseRecordSerializer(serializers.ModelSerializer):
+    """
+        学习记录
+    """
+
+    title = serializers.CharField(source='course.title', read_only=True)
+    cover = serializers.ImageField(source='course.cover_img', read_only=True)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = CourseRecord
+        fields = '__all__'
